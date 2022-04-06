@@ -29,13 +29,42 @@ suite('UnitTests', () => {
     assert.isFalse(isValid)
   })
 
+  test('Logic handles a valid row placement', () => {
+    const solver = new Solver()
+    const puzzleString = '..9..5.1.85.4....2432......1...69.83.9.....6.62.71...9......1945....4.37.4.3..6..'
+    const value = 7
+
+    assert.isTrue(solver.checkRowPlacement(puzzleString, 0, 0, value))
+  })
+
+  test('Logic handles an invalid row placement', () => {
+    const solver = new Solver()
+    const puzzleString = '..9..5.1.85.4....2432......1...69.83.9.....6.62.71...9......1945....4.37.4.3..6..'
+    const value = 1
+
+    assert.isFalse(solver.checkRowPlacement(puzzleString, 0, 0, value))
+  })
+
+  test('Logic handles a valid column placement', () => {
+    const solver = new Solver()
+    const puzzleString = '..9..5.1.85.4....2432......1...69.83.9.....6.62.71...9......1945....4.37.4.3..6..'
+    const value = 7
+
+    assert.isTrue(solver.checkColPlacement(puzzleString, 0, 0, value))
+  })
+
+  test('Logic handles an invalid column placement', () => {
+    const solver = new Solver()
+    const puzzleString = '..9..5.1.85.4....2432......1...69.83.9.....6.62.71...9......1945....4.37.4.3..6..'
+    const value = 6
+
+    assert.isFalse(solver.checkColPlacement(puzzleString, 0, 0, value))
+  })
+
   // TODO:
-  //   test('Logic handles a valid row placement')
-  //   test('Logic handles an invalid row placement')
-  //   test('Logic handles a valid column placement')
-  //   test('Logic handles an invalid column placement')
   //   test('Logic handles a valid region (3x3 grid) placement')
   //   test('Logic handles an invalid region (3x3 grid) placement')
+
   //   test('Valid puzzle strings pass the solver')
   //   test('Invalid puzzle strings fail the solver')
   //   test('Solver returns the expected solution for an incomplete puzzle')
