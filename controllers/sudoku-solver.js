@@ -6,14 +6,14 @@ class SudokuSolver {
    * Take a given puzzle string and check it to see if it has 81 valid characters for the input.
    *
    * @param {string} puzzleString
-   * @returns boolean
+   * @returns null | string
    */
   validate(puzzleString) {
-    if (typeof puzzleString !== 'string') throw new Error('Expected string, received:', typeof puzzleString)
-    if (puzzleString.length !== 81) throw new Error('Expected puzzle to be 81 characters long')
-    if (puzzleString.replace(/[1-9.]/g, '').length) throw new Error('Invalid characters in puzzle')
+    if (typeof puzzleString !== 'string') return 'Expected string, received:' + typeof puzzleString
+    if (puzzleString.length !== 81) return 'Expected puzzle to be 81 characters long'
+    if (puzzleString.replace(/[1-9.]/g, '').length) return 'Invalid characters in puzzle'
 
-    return true
+    return null
   }
 
   /**
@@ -78,7 +78,13 @@ class SudokuSolver {
   /**
    * Handle solving any given valid puzzle string
    */
-  solve(puzzleString) {}
+  solve(puzzleString) {
+    const validationError = this.validate(puzzleString)
+
+    if (validationError) {
+      throw new Error(validationError)
+    }
+  }
 }
 
 module.exports = SudokuSolver

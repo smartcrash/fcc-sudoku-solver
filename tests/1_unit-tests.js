@@ -8,23 +8,25 @@ suite('UnitTests', () => {
   test('Logic handles a valid puzzle string of 81 characters', () => {
     const solver = new Solver()
     const puzzleString = '..839.7.575.....964..1.......16.29846.9.312.7..754.....62..5.78.8...3.2...492...1'
-    const isValid = solver.validate(puzzleString)
+    const validationError = solver.validate(puzzleString)
 
-    assert.isTrue(isValid)
+    assert.isNull(validationError)
   })
 
   test('Logic handles a puzzle string with invalid characters (not 1-9 or .)', () => {
     const solver = new Solver()
     const puzzleString = 'INVALID 1.5..2.84..63.12.7.2..5.....9..1....8.2.3674.3.7.2..9.47...8..1..16....92'
+    const validationError = solver.validate(puzzleString)
 
-    assert.throws(() => solver.validate(puzzleString), Error, 'Invalid characters in puzzle')
+    assert.equal(validationError, 'Invalid characters in puzzle')
   })
 
   test('Logic handles a puzzle string that is not 81 characters in length', () => {
     const solver = new Solver()
     const puzzleString = '1.5..2.84..63.12.7.2..5.....9..1....8.2.36'
+    const validationError = solver.validate(puzzleString)
 
-    assert.throws(() => solver.validate(puzzleString), Error, 'Expected puzzle to be 81 characters long')
+    assert.equal(validationError, 'Expected puzzle to be 81 characters long')
   })
 
   test('Logic handles a valid row placement', () => {
