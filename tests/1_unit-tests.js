@@ -16,17 +16,15 @@ suite('UnitTests', () => {
   test('Logic handles a puzzle string with invalid characters (not 1-9 or .)', () => {
     const solver = new Solver()
     const puzzleString = 'INVALID 1.5..2.84..63.12.7.2..5.....9..1....8.2.3674.3.7.2..9.47...8..1..16....92'
-    const isValid = solver.validate(puzzleString)
 
-    assert.isFalse(isValid)
+    assert.throws(() => solver.validate(puzzleString), Error, 'Invalid characters in puzzle')
   })
 
   test('Logic handles a puzzle string that is not 81 characters in length', () => {
     const solver = new Solver()
     const puzzleString = '1.5..2.84..63.12.7.2..5.....9..1....8.2.36'
-    const isValid = solver.validate(puzzleString)
 
-    assert.isFalse(isValid)
+    assert.throws(() => solver.validate(puzzleString), Error, 'Expected puzzle to be 81 characters long')
   })
 
   test('Logic handles a valid row placement', () => {

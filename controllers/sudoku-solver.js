@@ -9,9 +9,9 @@ class SudokuSolver {
    * @returns boolean
    */
   validate(puzzleString) {
-    if (typeof puzzleString !== 'string') return false
-    if (puzzleString.length !== 81) return false
-    if (puzzleString.replace(/[1-9.]/g, '').length) return false // Has invalid characters
+    if (typeof puzzleString !== 'string') throw new Error('Expected string, received:', typeof puzzleString)
+    if (puzzleString.length !== 81) throw new Error('Expected puzzle to be 81 characters long')
+    if (puzzleString.replace(/[1-9.]/g, '').length) throw new Error('Invalid characters in puzzle')
 
     return true
   }
