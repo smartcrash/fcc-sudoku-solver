@@ -61,9 +61,23 @@ suite('UnitTests', () => {
     assert.isFalse(solver.checkColPlacement(puzzleString, 0, 0, value))
   })
 
+  test('Logic handles a valid region (3x3 grid) placement', () => {
+    const solver = new Solver()
+    const puzzleString = '..9..5.1.85.4....2432......1...69.83.9.....6.62.71...9......1945....4.37.4.3..6..'
+    const value = 1
+
+    assert.isTrue(solver.checkRegionPlacement(puzzleString, 0, 0, value))
+  })
+
+  test('Logic handles an invalid region (3x3 grid) placement', () => {
+    const solver = new Solver()
+    const puzzleString = '..9..5.1.85.4....2432......1...69.83.9.....6.62.71...9......1945....4.37.4.3..6..'
+    const value = 2
+
+    assert.isFalse(solver.checkRegionPlacement(puzzleString, 0, 0, value))
+  })
+
   // TODO:
-  //   test('Logic handles a valid region (3x3 grid) placement')
-  //   test('Logic handles an invalid region (3x3 grid) placement')
 
   //   test('Valid puzzle strings pass the solver')
   //   test('Invalid puzzle strings fail the solver')

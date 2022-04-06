@@ -52,7 +52,28 @@ class SudokuSolver {
     return true
   }
 
-  checkRegionPlacement(puzzleString, row, column, value) {}
+  /**
+   * If the given value is already in the same 3x3 square is not a valid placement
+   *
+   * @param {string} puzzleString
+   * @param {number} row
+   * @param {number} column
+   * @param {number | string} value
+   * @returns boolean
+   */
+  checkRegionPlacement(puzzleString, row, column, value) {
+    const startX = row >= 6 ? 6 : row >= 3 ? 3 : 0
+    const startY = column >= 6 ? 6 : column >= 3 ? 3 : 0
+
+    for (let x = startX; x < startX + 3; ++x) {
+      for (let y = startY; y < startY + 3; ++y) {
+        const index = xyToIndex(x, y)
+        if (puzzleString[index] === value.toString()) return false
+      }
+    }
+
+    return true
+  }
 
   /**
    * Handle solving any given valid puzzle string
