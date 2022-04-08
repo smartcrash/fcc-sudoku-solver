@@ -1,5 +1,5 @@
-const indexToXY = index => [Math.floor(index / 9), index % 9]
-const xyToIndex = (x, y) => x * 9 + y
+const indexToXY = index => [index % 9, Math.floor(index / 9)]
+const xyToIndex = (x, y) => y * 9 + x
 
 class SudokuSolver {
   /**
@@ -25,9 +25,11 @@ class SudokuSolver {
    * @param {number | string} value
    * @returns boolean
    */
-  checkRowPlacement(puzzleString, row, _, value) {
-    for (let column = 0; column < 9; ++column) {
-      const index = xyToIndex(row, column)
+  checkRowPlacement(puzzleString, row, _column, value) {
+    const y = row
+
+    for (let x = 0; x < 9; ++x) {
+      const index = xyToIndex(x, y)
       if (puzzleString[index] === value.toString()) return false
     }
 
@@ -43,9 +45,11 @@ class SudokuSolver {
    * @param {number | string} value
    * @returns boolean
    */
-  checkColPlacement(puzzleString, _, column, value) {
-    for (let row = 0; row < 9; ++row) {
-      const index = xyToIndex(row, column)
+  checkColPlacement(puzzleString, _row, column, value) {
+    const x = column
+
+    for (let y = 0; y < 9; ++y) {
+      const index = xyToIndex(x, y)
       if (puzzleString[index] === value.toString()) return false
     }
 
@@ -62,8 +66,8 @@ class SudokuSolver {
    * @returns boolean
    */
   checkRegionPlacement(puzzleString, row, column, value) {
-    const startX = row >= 6 ? 6 : row >= 3 ? 3 : 0
-    const startY = column >= 6 ? 6 : column >= 3 ? 3 : 0
+    const startX = column >= 6 ? 6 : column >= 3 ? 3 : 0
+    const startY = row >= 6 ? 6 : row >= 3 ? 3 : 0
 
     for (let x = startX; x < startX + 3; ++x) {
       for (let y = startY; y < startY + 3; ++y) {
@@ -124,7 +128,7 @@ class SudokuSolver {
    */
   _getMoves(puzzleString, index) {
     const moves = []
-    const [row, column] = indexToXY(index)
+    const [column, row] = indexToXY(index)
 
     for (let n = 1; n <= 9; ++n) {
       if (
