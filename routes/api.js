@@ -5,14 +5,18 @@ const SudokuSolver = require('../controllers/sudoku-solver.js')
 /**
  * Expect a string where is the letter A-I indicating the row, followed by a number 1-9 indicating the column
  * @param {string} string
- * @returns [number, number]
+ * @returns [number, number, string | null]
  */
 const stringToXY = string => {
   const [firstLetter, secondLetter] = string.split('')
   const x = Number.parseInt(secondLetter) - 1
   const y = firstLetter.toLocaleLowerCase().charCodeAt(0) - 97
 
-  return [x, y]
+  let error = null
+
+  if (x >= 9 || y >= 9 || x < 0 || y < 0) error = 'Invalid coordinate'
+
+  return [x, y, error]
 }
 
 module.exports = function (app) {
@@ -22,7 +26,18 @@ module.exports = function (app) {
     const { puzzle, coordinate, value } = req.body
     const conflict = []
 
-    const [column, row] = stringToXY(coordinate)
+    if (!puzzle || !coordinate || !value) {
+      return res.json({ error: 'Required field(s) missing' })
+    }
+
+    const validationError = solver.validate(puzzle)
+    const [column, row, coordenatesError] = stringToXY(coordinate)
+    const valueError = Number(value) > 9 || Number(value) < 0 ? 'Invalid value' : null
+    const error = validationError || coordenatesError || valueError
+
+    if (error) {
+      return res.json({ error })
+    }
 
     if (!solver.checkRowPlacement(puzzle, row, column, value)) {
       conflict.push('row')
