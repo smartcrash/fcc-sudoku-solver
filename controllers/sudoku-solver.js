@@ -25,12 +25,14 @@ class SudokuSolver {
    * @param {number | string} value
    * @returns boolean
    */
-  checkRowPlacement(puzzleString, row, _column, value) {
+  checkRowPlacement(puzzleString, row, column, value) {
     const y = row
 
     for (let x = 0; x < 9; ++x) {
-      const index = xyToIndex(x, y)
-      if (puzzleString[index] === value.toString()) return false
+      if (column !== x) {
+        const index = xyToIndex(x, y)
+        if (puzzleString[index] === value.toString()) return false
+      }
     }
 
     return true
@@ -45,12 +47,14 @@ class SudokuSolver {
    * @param {number | string} value
    * @returns boolean
    */
-  checkColPlacement(puzzleString, _row, column, value) {
+  checkColPlacement(puzzleString, row, column, value) {
     const x = column
 
     for (let y = 0; y < 9; ++y) {
-      const index = xyToIndex(x, y)
-      if (puzzleString[index] === value.toString()) return false
+      if (row !== y) {
+        const index = xyToIndex(x, y)
+        if (puzzleString[index] === value.toString()) return false
+      }
     }
 
     return true
@@ -71,8 +75,10 @@ class SudokuSolver {
 
     for (let x = startX; x < startX + 3; ++x) {
       for (let y = startY; y < startY + 3; ++y) {
-        const index = xyToIndex(x, y)
-        if (puzzleString[index] === value.toString()) return false
+        if (row !== y && column !== x) {
+          const index = xyToIndex(x, y)
+          if (puzzleString[index] === value.toString()) return false
+        }
       }
     }
 

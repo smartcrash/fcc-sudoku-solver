@@ -214,6 +214,29 @@ suite('Functional Tests', () => {
       })
   })
 
+  test.only('If value submitted to /api/check is already placed in puzzle on that coordinate, the returned value will be an object containing a valid property with true if value is not conflicting.', done => {
+    const puzzleString = '..9..5.1.85.4....2432......1...69.83.9.....6.62.71...9......1945....4.37.4.3..6..'
+    const coordinate = 'C3'
+    const value = '2'
+
+    chai
+      .request(server)
+      .post('/api/check')
+      .send({
+        puzzle: puzzleString,
+        coordinate,
+        value,
+      })
+      .end(function (err, res) {
+        assert.isNull(err)
+        assert.equal(res.status, 200)
+        assert.isObject(res.body)
+        assert.equal(res.body.valid, true)
+
+        done()
+      })
+  })
+
   /*
   // If the object submitted to /api/check is missing puzzle, coordinate or
   // value, the returned value will be { error: Required field(s) missing }
