@@ -23,6 +23,21 @@ const stringToXY = string => {
   return [x, y, error]
 }
 
+/**
+ * @param {string | number} value
+ * @returns {null | string}
+ */
+const validateValue = value => {
+  value = value.toString()
+
+  let valid = true
+
+  valid = value.length = 1
+  valid = !/[^1-9]/g.test(value)
+
+  return valid
+}
+
 module.exports = function (app) {
   const solver = new SudokuSolver()
 
@@ -36,7 +51,7 @@ module.exports = function (app) {
 
     const validationError = solver.validate(puzzle)
     const [column, row, coordenatesError] = stringToXY(coordinate)
-    const valueError = Number(value) > 9 || Number(value) < 0 ? 'Invalid value' : null
+    const valueError = validateValue(value)
     const error = validationError || coordenatesError || valueError
 
     if (error) {
