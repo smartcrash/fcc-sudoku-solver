@@ -214,7 +214,7 @@ suite('Functional Tests', () => {
       })
   })
 
-  test.only('If value submitted to /api/check is already placed in puzzle on that coordinate, the returned value will be an object containing a valid property with true if value is not conflicting.', done => {
+  test('If value submitted to /api/check is already placed in puzzle on that coordinate, the returned value will be an object containing a valid property with true if value is not conflicting.', done => {
     const puzzleString = '..9..5.1.85.4....2432......1...69.83.9.....6.62.71...9......1945....4.37.4.3..6..'
     const coordinate = 'C3'
     const value = '2'
