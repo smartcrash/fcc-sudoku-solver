@@ -88,8 +88,10 @@ suite('Functional Tests', () => {
       })
   })
 
+  /*
   // If the puzzle submitted to /api/solve is invalid or cannot be solved,
   // the returned value will be { error: 'Puzzle cannot be solved' }
+  */
   test('Solve a puzzle that cannot be solved: POST request to /api/solve', done => {
     const puzzleString = '82..4..6...16..89...98315.749.157.............53..4...96.999..81..7632..3...28.99'
 
@@ -106,11 +108,112 @@ suite('Functional Tests', () => {
       })
   })
 
-  //   test('Check a puzzle placement with all fields: POST request to /api/check', (done) => {})
+  /*
+  // You can POST to /api/check an object containing puzzle, coordinate, and
+  // value where the coordinate is the letter A-I indicating the row, followed
+  // by a number 1-9 indicating the column, and value is a number from 1-9.
+  */
+  test('Check a puzzle placement with all fields: POST request to /api/check', done => {
+    const puzzleString = '..9..5.1.85.4....2432......1...69.83.9.....6.62.71...9......1945....4.37.4.3..6..'
 
-  //   test('Check a puzzle placement with single placement conflict: POST request to /api/check', (done) => {})
-  //   test('Check a puzzle placement with multiple placement conflicts: POST request to /api/check', (done) => {})
-  //   test('Check a puzzle placement with all placement conflicts: POST request to /api/check', (done) => {})
+    chai
+      .request(server)
+      .post('/api/check')
+      .send({
+        puzzle: puzzleString,
+        coordinate: 'A1',
+        value: '7',
+      })
+      .end(function (err, res) {
+        assert.isNull(err)
+        assert.equal(res.status, 200)
+        assert.isObject(res.body)
+        assert.equal(res.body.valid, true)
+        done()
+      })
+  })
+
+  /*
+  // The return value from the POST to /api/check will be an object
+  // containing a valid property, which is true if the number may
+  // be placed at the provided coordinate and false if the number may
+  // not. If false, the returned object will also contain a conflict
+  // property which is an array containing the strings "row", "column",
+  // and/or "region" depending on which makes the placement invalid.
+  */
+  test('Check a puzzle placement with single placement conflict: POST request to /api/check', done => {
+    const puzzleString = '..9..5.1.85.4....2432......1...69.83.9.....6.62.71...9......1945....4.37.4.3..6..'
+
+    chai
+      .request(server)
+      .post('/api/check')
+      .send({
+        puzzle: puzzleString,
+        coordinate: 'A1',
+        value: '6',
+      })
+      .end(function (err, res) {
+        assert.isNull(err)
+        assert.equal(res.status, 200)
+        assert.isObject(res.body)
+        assert.equal(res.body.valid, false)
+        assert.isArray(res.body.conflict)
+        assert.deepEqual(res.body.conflict, ['column'])
+
+        done()
+      })
+  })
+
+  test('Check a puzzle placement with multiple placement conflicts: POST request to /api/check', done => {
+    const puzzleString = '..9..5.1.85.4....2432......1...69.83.9.....6.62.71...9......1945....4.37.4.3..6..'
+
+    chai
+      .request(server)
+      .post('/api/check')
+      .send({
+        puzzle: puzzleString,
+        coordinate: 'A1',
+        value: '1',
+      })
+      .end(function (err, res) {
+        assert.isNull(err)
+        assert.equal(res.status, 200)
+        assert.isObject(res.body)
+        assert.equal(res.body.valid, false)
+
+        assert.isArray(res.body.conflict)
+        assert.lengthOf(res.body.conflict, 2)
+        assert.sameMembers(res.body.conflict, ['column', 'row'])
+
+        done()
+      })
+  })
+
+  test('Check a puzzle placement with all placement conflicts: POST request to /api/check', done => {
+    const puzzleString = '..9..5.1.85.4....2432......1...69.83.9.....6.62.71...9......1945....4.37.4.3..6..'
+
+    chai
+      .request(server)
+      .post('/api/check')
+      .send({
+        puzzle: puzzleString,
+        coordinate: 'A1',
+        value: '5',
+      })
+      .end(function (err, res) {
+        assert.isNull(err)
+        assert.equal(res.status, 200)
+        assert.isObject(res.body)
+        assert.equal(res.body.valid, false)
+
+        assert.isArray(res.body.conflict)
+        assert.lengthOf(res.body.conflict, 3)
+        assert.sameMembers(res.body.conflict, ['column', 'row', 'region'])
+
+        done()
+      })
+  })
+
   //   test('Check a puzzle placement with missing required fields: POST request to /api/check', (done) => {})
   //   test('Check a puzzle placement with invalid characters: POST request to /api/check', (done) => {})
   //   test('Check a puzzle placement with incorrect length: POST request to /api/check', (done) => {})
