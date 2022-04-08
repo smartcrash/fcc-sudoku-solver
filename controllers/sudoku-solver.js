@@ -90,7 +90,13 @@ class SudokuSolver {
 
     this._solveSudoku(puzzle)
 
-    return puzzle.join('')
+    const solution = puzzle.join('')
+
+    if (solution === puzzleString) {
+      throw new Error('Puzzle cannot be solved')
+    }
+
+    return solution
   }
 
   /**
