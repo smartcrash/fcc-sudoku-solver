@@ -5,9 +5,13 @@ const SudokuSolver = require('../controllers/sudoku-solver.js')
 /**
  * Expect a string where is the letter A-I indicating the row, followed by a number 1-9 indicating the column
  * @param {string} string
- * @returns [number, number, string | null]
+ * @returns [number | null, number | null, string | null]
  */
 const stringToXY = string => {
+  if (string.length !== 2) {
+    return [null, null, 'Invalid coordinate']
+  }
+
   const [firstLetter, secondLetter] = string.split('')
   const x = Number.parseInt(secondLetter) - 1
   const y = firstLetter.toLocaleLowerCase().charCodeAt(0) - 97
