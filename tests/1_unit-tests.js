@@ -81,14 +81,22 @@ suite('UnitTests', () => {
     const solver = new Solver()
     const puzzleString = '82..4..6...16..89...98315.749.157.............53..4...96.415..81..7632..3...28.51'
 
-    assert.doesNotThrow(() => solver.solve(puzzleString))
+    const solution = solver.solve(puzzleString)
+
+    assert.isString(solution)
+    assert.isNotEmpty(solution)
   })
 
   test('Invalid puzzle strings fail the solver', () => {
     const solver = new Solver()
     const puzzleString = 'INVALID 1.5..2.84..63.12.7.2..5.....9..1....8.2.3674.3.7.2..9.47...8..1..16....92'
 
-    assert.throws(() => solver.solve(puzzleString), Error)
+    try {
+      solver.solve(puzzleString)
+      assert(false)
+    } catch (error) {
+      assert.instanceOf(error, Error)
+    }
   })
 
   test('Solver returns the expected solution for an incomplete puzzle', () => {
