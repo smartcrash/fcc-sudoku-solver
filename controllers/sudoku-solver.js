@@ -19,7 +19,7 @@ class SudokuSolver {
   /**
    * Check if given value can be placed on the given row
    *
-   * @param {string} puzzleString
+   * @param {string  | string[]} puzzleString
    * @param {number} row
    * @param {number} column
    * @param {number | string} value
@@ -37,7 +37,7 @@ class SudokuSolver {
   /**
    * Check if given value can be placed on the given column
    *
-   * @param {string} puzzleString
+   * @param {string | string[]} puzzleString
    * @param {number} row
    * @param {number} column
    * @param {number | string} value
@@ -55,7 +55,7 @@ class SudokuSolver {
   /**
    * If the given value is already in the same 3x3 square is not a valid placement
    *
-   * @param {string} puzzleString
+   * @param {string | string[]} puzzleString
    * @param {number} row
    * @param {number} column
    * @param {number | string} value
@@ -77,6 +77,7 @@ class SudokuSolver {
 
   /**
    * Handle solving any given valid puzzle string
+   * @param {string} puzzleString
    */
   solve(puzzleString) {
     const validationError = this.validate(puzzleString)
@@ -84,6 +85,78 @@ class SudokuSolver {
     if (validationError) {
       throw new Error(validationError)
     }
+
+    const puzzle = puzzleString.split('')
+
+    this._solveSudoku(puzzle)
+
+    return puzzle.join('')
+  }
+
+  /**
+   * @param {string[]} puzzle
+   * @returns {boolean}
+   */
+  _solveSudoku(puzzle) {
+    const [index, moves] = this._bestMove(puzzle)
+
+    if (index === null) return true // Is already solved!
+
+    for (let move of moves) {
+      puzzle[index] = move
+      if (this._solveSudoku(puzzle)) return true
+    }
+
+    puzzle[index] = '.' // no digit fits here, backtrack!
+    return false
+  }
+
+  /**
+   * @param {string} puzzleString
+   * @param {number} index
+   * @returns string[]
+   */
+  _getMoves(puzzleString, index) {
+    const moves = []
+    const [row, column] = indexToXY(index)
+
+    for (let n = 1; n <= 9; ++n) {
+      if (
+        this.checkColPlacement(puzzleString, row, column, n) &&
+        this.checkRowPlacement(puzzleString, row, column, n) &&
+        this.checkRegionPlacement(puzzleString, row, column, n)
+      ) {
+        moves.push(n.toString())
+      }
+    }
+
+    return moves
+  }
+
+  /**
+   * Retuns the index of the cell with the fewest posible moves
+   * @param {string | string[]} puzzleString
+   * @returns [number, string[]]
+   */
+  _bestMove(puzzleString) {
+    let index = null
+    let moves = []
+    let best = Infinity
+
+    for (let i = 0; i < puzzleString.length; ++i)
+      if (puzzleString[i] === '.') {
+        const m = this._getMoves(puzzleString, i)
+
+        if (m.length < best) {
+          best = m.length
+          index = i
+          moves = m
+
+          if (best === 0) break
+        }
+      }
+
+    return [index, moves]
   }
 }
 

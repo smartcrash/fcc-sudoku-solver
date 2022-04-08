@@ -77,9 +77,27 @@ suite('UnitTests', () => {
     assert.isFalse(solver.checkRegionPlacement(puzzleString, 0, 0, value))
   })
 
-  // TODO:
+  test('Valid puzzle strings pass the solver', () => {
+    const solver = new Solver()
+    const puzzleString = '82..4..6...16..89...98315.749.157.............53..4...96.415..81..7632..3...28.51'
 
-  //   test('Valid puzzle strings pass the solver')
-  //   test('Invalid puzzle strings fail the solver')
-  //   test('Solver returns the expected solution for an incomplete puzzle')
+    assert.doesNotThrow(() => solver.solve(puzzleString))
+  })
+
+  test('Invalid puzzle strings fail the solver', () => {
+    const solver = new Solver()
+    const puzzleString = 'INVALID 1.5..2.84..63.12.7.2..5.....9..1....8.2.3674.3.7.2..9.47...8..1..16....92'
+
+    assert.throws(() => solver.solve(puzzleString), Error)
+  })
+
+  test('Solver returns the expected solution for an incomplete puzzle', () => {
+    const solver = new Solver()
+
+    puzzlesAndSolutions.forEach(([puzzleString, solution]) => {
+      const result = solver.solve(puzzleString)
+
+      assert.equal(result, solution)
+    })
+  })
 })
