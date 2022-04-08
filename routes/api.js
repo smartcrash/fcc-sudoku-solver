@@ -32,10 +32,10 @@ const validateValue = value => {
 
   let valid = true
 
-  valid = value.length = 1
+  valid = value.length === 1
   valid = !/[^1-9]/g.test(value)
 
-  return valid
+  return !valid ? 'Invalid value' : null
 }
 
 module.exports = function (app) {
